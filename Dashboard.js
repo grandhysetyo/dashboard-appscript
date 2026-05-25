@@ -28,13 +28,16 @@ function insertBookingToDashboard(data) {
     data.whatsapp,
     data.notes,
     data.summary,
-    "",
-    "",
+    "", // photographer
+    "", // photographer/videographer
+
+    "", // action calendar
 
     CONFIG.PAYMENT_DEFAULT,
     CONFIG.PROJECT_DEFAULT,
 
-    "",
+    "", // deadline
+    "", // lain lain
 
     new Date(),
 

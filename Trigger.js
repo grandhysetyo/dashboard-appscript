@@ -56,7 +56,7 @@ function onDashboardEdit(e) {
     if (row < 2) return;
 
     const data = sheet
-      .getRange(row, 1, 1, 24)
+      .getRange(row, 1, 1, 26)
       .getValues()[0];
 
     const rowData = {
@@ -128,6 +128,10 @@ function onDashboardEdit(e) {
         data[
           CONFIG.COL.PHOTOGRAPHER - 1
         ],
+      videographerphotographer:
+        data[
+          CONFIG.COL.PHOTOGRAPHER_VIDEOGRAPHER - 1
+        ],
       actionCalendar:
         data[
           CONFIG.COL.ACTION_CALENDAR - 1
@@ -165,46 +169,6 @@ function onDashboardEdit(e) {
         return;
       }
 
-      // =========================
-      // REGENERATE SUMMARY
-      // =========================
-
-      const newSummary =
-        generateSummary({
-          bookingId:
-            rowData.bookingId,
-          nama:
-            rowData.client,
-          universitas:
-            rowData.university,
-          tanggal:
-            rowData.tanggal,
-          jam1:
-            rowData.jam1,
-          jam2:
-            rowData.jam2,
-          lokasi:
-            rowData.lokasi,
-          paket:
-            rowData.package,
-          instagram:
-            rowData.instagram,
-          whatsapp:
-            rowData.whatsapp,
-          notes:
-            rowData.notes
-        });
-
-      // UPDATE SUMMARY COLUMN
-      sheet.getRange(
-        row,
-        CONFIG.COL.SUMMARY
-      ).setValue(newSummary);
-
-      // UPDATE OBJECT
-      rowData.summary =
-        newSummary;
-
       const photographer =
         getPhotographerByName(
           e.value
@@ -214,6 +178,47 @@ function onDashboardEdit(e) {
 
         const hex =
           photographer.hex || "#FFFFFF";
+
+        cell.setBackground(hex);
+
+        cell.setFontColor(
+          getContrastColor(hex)
+        );
+      }
+    }
+
+    // =========================
+    // PHOTOGRAPHER_VIDEOGRAPHER COLOR
+    // =========================
+
+    if (
+      col === CONFIG.COL.PHOTOGRAPHER_VIDEOGRAPHER
+    ) {
+
+      const cell =
+        sheet.getRange(
+          row,
+          CONFIG.COL.PHOTOGRAPHER_VIDEOGRAPHER
+        );
+
+      if (!e.value) {
+
+        cell
+          .setBackground("#FFFFFF")
+          .setFontColor("#000000");
+
+        return;
+      }
+
+      const photographer_videogrpaher =
+        getPhotographerByName(
+          e.value
+        );
+
+      if (photographer_videogrpaher) {
+
+        const hex =
+        photographer_videogrpaher.hex || "#FFFFFF";
 
         cell.setBackground(hex);
 

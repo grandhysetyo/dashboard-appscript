@@ -126,15 +126,10 @@ function combineDateTime(dateValue,timeValue) {
   // =========================
 
   return new Date(
-
     year,
-
     month,
-
     day,
-
     hours,
-
     minutes,
 
     0

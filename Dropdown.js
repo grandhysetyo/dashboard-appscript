@@ -30,6 +30,15 @@ function refreshPhotographerDropdown() {
     )
     .setDataValidation(rule);
 
+    sheet
+    .getRange(
+      2,
+      CONFIG.COL.PHOTOGRAPHER_VIDEOGRAPHER,
+      lastRow,
+      1
+    )
+    .setDataValidation(rule);
+
   writeLog(
     "DROPDOWN",
     "Photographer refreshed"

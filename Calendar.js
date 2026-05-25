@@ -113,154 +113,48 @@ function safeGetEvent(
   }
 }
 
-function recreateMissingCalendarEvent(
-  rowData
-) {
-  
-    Logger.log('START',rowData.jam1)
-    const bookingData = {
-      clientName:
-        rowData.client,
 
-      universitas:
-        rowData.university,
-
-      fakultas:
-        rowData.faculty,
-
-      whatsapp:
-        rowData.whatsapp,
-
-      instagram:
-        rowData.instagram,
-
-      paket:
-        rowData.package,
-
-      tanggal:
-        rowData.tanggal,
-
-      jam1:
-        rowData.jam,
-
-      lokasi:
-        rowData.lokasi,
-
-      notes:
-        rowData.notes,
-
-      summary:
-        rowData.summary,
-
-      photographer:
-        rowData.photographer
-    };
-
-    writeLog(
-      "RECREATE_EVENT_START",
-      JSON.stringify(bookingData)
+function createSingleEvent(data) {
+  const startTime =
+    combineDateTime(
+      data.tanggal,
+      data.jam
     );
 
-    const eventIds =
-      createCalendarEvents(
-        bookingData
-      );
+  const endTime =
+    new Date(
+      startTime.getTime() +
+      data.duration * 60 * 60 * 1000
+    );
 
-    console.log("RECREATE_CREATED_IDS",JSON.stringify(events));
-    // =========================
-    // VALIDATION
-    // =========================
-
-    if (
-      !eventIds ||
-      !Array.isArray(eventIds) ||
-      eventIds.length === 0
-    ) {
-
-      writeLog(
-        "RECREATE_FAILED",
-        rowData.bookingId
-      );
-
-      throw new Error(
-        "Failed to recreate calendar event"
-      );
-    }
-
-    // =========================
-    // VERIFY EVENT EXISTS
-    // =========================
-
-    const calendar =
-      CalendarApp.getCalendarById(
-        CONFIG.CALENDAR_ID
-      );
-
-    eventIds.forEach(id => {
-
-      const event =
-        safeGetEvent(
-          calendar,
-          id
-        );
-
-      if (!event) {
-
-        throw new Error(
-          `Recreated event verification failed: ${id}`
-        );
+  const event =
+    data.calendar.createEvent(
+      data.title,
+      startTime,
+      endTime,
+      {
+        description: data.summary
       }
-    });
-
-    // =========================
-    // UPDATE DASHBOARD
-    // =========================
-
-    const sheet =
-      getDashboardSheet();
-
-    const data =
-      sheet
-        .getDataRange()
-        .getValues();
-
-    for (
-      let i = 1;
-      i < data.length;
-      i++
-    ) {
-
-      const bookingId =
-        data[i][
-          CONFIG.COL.BOOKING_ID - 1
-        ];
-
-      if (
-        bookingId ===
-        rowData.bookingId
-      ) {
-
-        sheet.getRange(
-          i + 1,
-          CONFIG.COL.CALENDAR_ID
-        )
-        .setValue(
-          eventIds.join(",")
-        );
-
-        break;
-      }
-    }
-
-    writeLog(
-      "RECREATE_SUCCESS",
-      eventIds.join(",")
     );
-    console.log(
-      "RECREATE_RETURN",
-      JSON.stringify(events)
+
+  event.setColor(
+    CalendarApp.EventColor.RED
+  );
+
+  if (!event) {
+    throw new Error(
+      "Calendar createEvent returned null"
     );
-    return eventIds;
+  }
+
+  const eventId =
+    event.getId();
+
+  writeLog(
+    "CREATE_SINGLE_EVENT_SUCCESS",
+    eventId
+  );
+  return eventId;
 }
 
 function createCalendarEvents(data) {
@@ -352,49 +246,6 @@ function createCalendarEvents(data) {
   return events;
 }
 
-function createSingleEvent(data) {
-    const startTime =
-      combineDateTime(
-        data.tanggal,
-        data.jam
-      );
-
-    const endTime =
-      new Date(
-        startTime.getTime() +
-        data.duration * 60 * 60 * 1000
-      );
-
-    const event =
-      data.calendar.createEvent(
-        data.title,
-        startTime,
-        endTime,
-        {
-          description: data.summary
-        }
-      );
-
-    event.setColor(
-      CalendarApp.EventColor.RED
-    );
-
-    if (!event) {
-      throw new Error(
-        "Calendar createEvent returned null"
-      );
-    }
-  
-    const eventId =
-      event.getId();
-
-    writeLog(
-      "CREATE_SINGLE_EVENT_SUCCESS",
-      eventId
-    );
-    return eventId;
-}
-
 function updateCalendarEvent(
   rowData,
   sheet,
@@ -452,11 +303,8 @@ function updateCalendarEvent(
     // =========================
 
     const existingEventIds = [
-
       rowData.calendarId1,
-
       rowData.calendarId2
-
     ].filter(Boolean);
 
     const existingEvents = [];
@@ -588,25 +436,18 @@ function updateCalendarEvent(
       // CREATE NEW EVENTS
       const newEventIds =
         createCalendarEvents({
-
           clientName:
             rowData.client,
-
           universitas:
             rowData.university,
-
           tanggal:
             rowData.tanggal,
-
           jam1:
             rowData.jam1,
-
           jam2:
             rowData.jam2,
-
           paket:
             rowData.package,
-
           summary:
             rowData.summary
         });
@@ -644,13 +485,9 @@ function updateCalendarEvent(
 
       // UPDATE EVENT CONTENT
       rebuiltEvents.forEach((event, index) => {
-
         updateSingleCalendarEvent({
-
           event,
-
           rowData,
-
           index
         });
       });
@@ -685,13 +522,9 @@ function updateCalendarEvent(
       );
 
       existingEvents.forEach((event, index) => {
-
         updateSingleCalendarEvent({
-
           event,
-
           rowData,
-
           index
         });
       });
@@ -723,13 +556,9 @@ function updateCalendarEvent(
     );
 
     setSystemMessage(
-
       sheet,
-
       row,
-
       "✅ Google Calendar updated",
-
       "#D9EAD3"
     );
 
@@ -752,13 +581,9 @@ function updateCalendarEvent(
     );
 
     setSystemMessage(
-
       sheet,
-
       row,
-
       `❌ ${err.toString()}`,
-
       "#F4CCCC"
     );
 
@@ -904,138 +729,3 @@ function completeCalendarEvent(eventId) {
   }
 }
 
-
-function testCreateEvent() {
-  const events =
-    createCalendarEvents({
-      clientName:
-        "GR CLIENT",
-      universitas:
-        "GR UNIVERSITY",
-      tanggal:
-        new Date(),
-      jam1:
-        "08:00",
-      jam2:
-        "",
-      paket:
-        "Personal Packages Silver - 1 Hours",
-
-      summary:
-        "TEST SUMMARY"
-    });
-
-  console.log(events);
-}
-
-function testRecreateFlow() {
-
-  const rowData = {
-
-    bookingId:
-      "TEST-RECREATE",
-
-    calendarId1:
-      "gp44dg53a9f5g045761vlldd0c@google.com",
-
-    calendarId2:
-      "",
-
-    client:
-      "TEST CLIENT",
-
-    university:
-      "TEST UNIVERSITY",
-
-    tanggal:
-      new Date(),
-
-    jam1:
-      "08:00",
-
-    jam2:
-      "",
-
-    lokasi:
-      "TEST LOCATION",
-
-    package:
-      "Personal Packages Silver - 1 Hours",
-
-    photographer:
-      "Grandhys",
-
-    photographerEmail:
-      "grandhysetyo@gmail.com",
-
-    summary:
-      "TEST SUMMARY"
-  };
-
-  updateCalendarEvent(
-    rowData
-  );
-}
-
-function testRecreateMissing() {
-
-  try {
-
-    const rowData = {
-
-      bookingId:
-        "TEST-RECREATE",
-
-      calendarId1:
-        "gp44dg53a9f5g045761vlldd0c@google.com",
-
-      calendarId2:
-        "",
-
-      client:
-        "TEST CLIENT",
-
-      university:
-        "TEST UNIVERSITY",
-
-      tanggal:
-        new Date(),
-
-      jam1:
-        "08:00",
-
-      jam2:
-        "",
-
-      lokasi:
-        "TEST LOCATION",
-
-      package:
-        "Personal Packages Silver - 1 Hours",
-
-      photographer:
-        "Grandhys",
-
-      photographerEmail:
-        "grandhysetyo@gmail.com",
-
-      summary:
-        "TEST SUMMARY"
-    };
-
-    const result =
-      recreateMissingCalendarEvent(
-        rowData
-      );
-
-    writeLog.log(result);
-
-  } catch (err) {
-
-    writeLog.log(
-      err.stack || err.toString()
-    );
-
-    throw err;
-  }
-}
