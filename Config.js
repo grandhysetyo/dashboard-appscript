@@ -5,9 +5,10 @@ const CONFIG = {
     // Spreadsheet Google Form Response
   FORM_SPREADSHEET_ID:"1UCZYpAsxbnkNq4A_u0F2fg--1hRbSrNMqdthrss3rXM",
 
-  // DASHBOARD
+  // Name Sheet
   DASHBOARD_SHEET_NAME: "Dashboard",
   LOG_SHEET_NAME: "Logs",
+  EDITOR_SHEET_NAME: "Editor",
 
   // PHOTOGRAPHER
   PHOTOGRAPHER_SHEET_NAME: "Form Responses 1",
@@ -15,6 +16,7 @@ const CONFIG = {
   // SPREADSHEET IDS
   DASHBOARD_SPREADSHEET_ID: "1sRXKSnc-hZImJF09_95E6TirBr5bQrfZo2UJBznjmOk",
   PHOTOGRAPHER_SPREADSHEET_ID: "1KVi33lJQ3oSMe-vyIeO_ZtDFBnGuqFhW_CGQVgorAhk",
+  
 
   // GOOGLE CALENDAR
   CALENDAR_ID: "24b6793537bca89df054cc37115c7a522714ec104490b640cdfbb76875cee158@group.calendar.google.com",
@@ -53,5 +55,16 @@ const CONFIG = {
 
     LAST_UPDATE: 25,
     SYSTEM_MESSAGE: 26
+  },
+
+  EDITOR_COL: {
+    BOOKING_ID: 1,
+    CLIENT_NAME: 2,
+    UNIVERSITY: 3,
+    PACKAGE: 4,
+    DEADLINE: 5,
+    GOOGLE_PHOTOS: 6,
+    STATUS_EDITED: 7,
+    LAST_UPDATE: 8
   }
 };

@@ -149,6 +149,50 @@ function refreshProjectDropdown() {
   );
 }
 
+function refreshEditorStatusDropdown() {
+
+  const ss =
+    SpreadsheetApp.openById(
+      CONFIG.DASHBOARD_SPREADSHEET_ID
+    );
+
+  const sheet =
+    ss.getSheetByName(
+      CONFIG.EDITOR_SHEET_NAME
+    );
+
+  const lastRow = Math.max(
+    sheet.getLastRow(),
+    1000
+  );
+
+  const rule =
+    SpreadsheetApp
+      .newDataValidation()
+      .requireValueInList([
+        "Waiting Edit",
+        "Finish Edited",
+        "Revisi",
+        "Done"
+      ], true)
+      .setAllowInvalid(false)
+      .build();
+
+  sheet
+    .getRange(
+      2,
+      CONFIG.EDITOR_COL.STATUS_EDITED,
+      lastRow,
+      1
+    )
+    .setDataValidation(rule);
+
+  writeLog(
+    "DROPDOWN",
+    "Editor Status refreshed"
+  );
+}
+
 function refreshAllDropdowns() {
 
   refreshPhotographerDropdown();

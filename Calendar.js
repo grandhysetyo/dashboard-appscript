@@ -772,45 +772,36 @@ function updateSingleCalendarEvent({
 
 function completeCalendarEvent(eventId) {
 
-  const calendar = CalendarApp.getCalendarById(
-    CONFIG.CALENDAR_ID
-  );
+  const calendar =
+    CalendarApp.getCalendarById(
+      CONFIG.CALENDAR_ID
+    );
 
   eventId
-  .toString()
-  .split(",")
-  .forEach(id => {
+    .toString()
+    .split(",")
 
-    const event =
-      safeGetEvent(
-        calendar,
-        id
-      );
+    .forEach(id => {
 
-    if (!event) return;
+      const event =
+        safeGetEvent(
+          calendar,
+          id
+        );
 
-    const title =
-      event.getTitle();
+      if (!event) return;
 
-    if (
-      !title.startsWith("✅")
-    ) {
+      const title =
+        event.getTitle();
 
-      event.setTitle(
-        "✅ " + title
-      );
-    }
-  });
+      if (
+        !title.startsWith("✅")
+      ) {
 
-  if (!event) return;
-
-  const title = event.getTitle();
-
-  if (!title.startsWith("✅")) {
-
-    event.setTitle(
-      "✅ " + title
-    );
-  }
+        event.setTitle(
+          "✅ " + title
+        );
+      }
+    });
 }
 

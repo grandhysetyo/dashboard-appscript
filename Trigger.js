@@ -342,6 +342,19 @@ function onDashboardEdit(e) {
         CONFIG.COL.LAST_UPDATE
       ).setValue(new Date());
 
+      insertToEditorSheet({
+        bookingId:
+          rowData.bookingId,
+        client:
+          rowData.client,
+        university:
+          rowData.university,
+        package:
+          rowData.package,
+        deadline:
+          calculateDeadline()
+      });
+
       setSystemMessage(
         sheet,
         row,
@@ -356,6 +369,32 @@ function onDashboardEdit(e) {
     }
 
     // =========================
+    // Revisi
+    // =========================
+
+    if (
+      col === CONFIG.COL.PROJECT_STATUS &&
+      e.value === "Revisi"
+    ){
+
+      updateEditorStatus(
+        rowData.bookingId,
+        "Revisi"
+      );
+      setSystemMessage(
+        sheet,
+        row,
+        "✅ Project Revisi",
+        "#D9EAD3"
+      );
+
+      writeLog(
+        "REVISI",
+        rowData.bookingId
+      );
+    }
+
+    // =========================
     // DONE
     // =========================
 
@@ -363,6 +402,11 @@ function onDashboardEdit(e) {
       col === CONFIG.COL.PROJECT_STATUS &&
       e.value === "Done"
     ) {
+
+      updateEditorStatus(
+        rowData.bookingId,
+        "Done"
+      );
 
       completeCalendarEvent([
         rowData.calendarId1,
@@ -426,21 +470,19 @@ function onOpen() {
     )
 
     .addItem(
-      "Refresh Project Dropdown",
+      "Refresh Status Project Dropdown",
       "refreshProjectDropdown"
     )
 
-    .addSeparator()
-
     .addItem(
-      "Refresh All Dropdowns",
-      "refreshAllDropdowns"
+      "Refresh Editor Dropdown",
+      "refreshEditorStatusDropdown"
     )
 
     .addSeparator()
 
     // =========================
-    // IMPORT
+    // Sync
     // =========================
 
     .addItem(
@@ -448,22 +490,7 @@ function onOpen() {
       "syncFutureBookings"
     )
 
-    .addSeparator()
-
     // =========================
-    // MAINTENANCE
-    // =========================
-
-    .addItem(
-      "Delete All Rays Events",
-      "deleteAllRaysEvents"
-    )
-
-    .addItem(
-      "Clear Dashboard Data",
-      "clearDashboardData"
-    )
-
     .addToUi();
 }
 
