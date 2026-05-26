@@ -238,27 +238,21 @@ function onDashboardEdit(e) {
     ) {
 
       try {
-
-        // VALIDATE PHOTOGRAPHER
-        if (!rowData.photographer) {
-
-          setSystemMessage(
-            sheet,
-            row,
-            "❌ Photographer empty",
-            "#F4CCCC"
-          );
-
-          return;
-        }
-
         const photographer =
           getPhotographerByName(
             rowData.photographer
           );
 
+        const videographer =
+          getPhotographerByName(
+            rowData.videographerphotographer
+          );
+        
         rowData.photographerEmail =
           photographer?.email || "";
+        
+        rowData.videographerEmail =
+          videographer?.email || "";
 
         // UPDATE EVENT
         const success =

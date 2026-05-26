@@ -541,11 +541,15 @@ function updateCalendarEvent(
       "Added"
     );
 
+    const hasAssignedTeam =rowData.photographer || rowData.videographerphotographer;
+
     sheet.getRange(
       row,
       CONFIG.COL.PROJECT_STATUS
     ).setValue(
-      "Assign"
+      hasAssignedTeam
+        ? "Assign"
+        : "Not Assign"
     );
 
     sheet.getRange(
@@ -602,13 +606,37 @@ function updateSingleCalendarEvent({
       rowData.photographer
     );
 
+  const videographer =
+    getFirstName(
+      rowData.videographerphotographer
+    );
+
   const client =
     getFirstName(
       rowData.client
     );
 
+  const isAssigned =
+    photographer || videographer;
+  
+  let assignLabel = "Not Assign";
+  
+  if (photographer && videographer) {
+  
+    assignLabel =
+      `${photographer}/${videographer}`;
+  
+  } else if (photographer) {
+  
+    assignLabel = photographer;
+  
+  } else if (videographer) {
+  
+    assignLabel = videographer;
+  }
+
   const title =
-    `RAYS | ${photographer} - ${client} - ${rowData.university}`;
+    `RAYS | ${assignLabel} - ${client} - ${rowData.university}`;
 
   event.setTitle(title);
 
@@ -652,36 +680,93 @@ function updateSingleCalendarEvent({
   // COLOR
   // =========================
 
-  const color =
-    getEventColor(
-      rowData.package
-    );
+  let color;
+
+  if (!isAssigned) {
+
+    // RED
+    color =
+      CalendarApp.EventColor.RED;
+
+  } else {
+
+    color =
+      getEventColor(
+        rowData.package
+      );
+  }
 
   event.setColor(
     Number(color)
   );
 
   // =========================
-  // GUEST
+  // GUEST SYNC
   // =========================
 
-  if (
-    rowData.photographerEmail
-  ) {
+  const guests = [
 
-    try {
+    rowData.photographerEmail,
 
-      event.addGuest(
-        rowData.photographerEmail
-      );
+    rowData.videographerEmail
 
-    } catch (err) {
+  ].filter(Boolean);
 
-      writeLog(
-        "ADD_GUEST_SKIP",
-        err.toString()
-      );
-    }
+  // REMOVE DUPLICATE
+  const uniqueGuests =
+    [...new Set(guests)];
+
+  try {
+
+    // =========================
+    // REMOVE OLD GUESTS
+    // =========================
+
+    const existingGuests =
+      event.getGuestList();
+
+    existingGuests.forEach(guest => {
+
+      try {
+
+        event.removeGuest(
+          guest.getEmail()
+        );
+
+      } catch (err) {
+
+        writeLog(
+          "REMOVE_GUEST_SKIP",
+          err.toString()
+        );
+      }
+    });
+
+    // =========================
+    // ADD NEW GUESTS
+    // =========================
+
+    uniqueGuests.forEach(email => {
+
+      try {
+
+        event.addGuest(email);
+
+      } catch (err) {
+
+        writeLog(
+          "ADD_GUEST_SKIP",
+          err.toString()
+        );
+      }
+    });
+
+  } catch (err) {
+
+    writeLog(
+      "SYNC_GUEST_ERROR",
+      err.toString()
+    );
   }
 }
 
