@@ -770,19 +770,16 @@ function updateSingleCalendarEvent({
   }
 }
 
-function completeCalendarEvent(eventId) {
+function completeCalendarEvent(eventIds) {
 
   const calendar =
     CalendarApp.getCalendarById(
       CONFIG.CALENDAR_ID
     );
 
-  eventId
-    .toString()
-    .split(",")
-
+  eventIds
+    .filter(Boolean)
     .forEach(id => {
-
       const event =
         safeGetEvent(
           calendar,
