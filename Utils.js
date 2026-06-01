@@ -344,21 +344,24 @@ function getDashboardLastRow(sheet) {
 }
 
 
-function testDateTime() {
+function sendAssignmentEmail(
+  email,
+  rowData
+) {
 
-  const startTime =
-    combineDateTime(
-      new Date(),
-      "15:30"
-    );
+  if (!email) return;
 
-  Logger.log(startTime);
+  const subject =
+    `[RAYS] ${rowData.client} - ${formatDate(rowData.tanggal)}`;
 
-  Logger.log(
-    startTime instanceof Date
-  );
+  MailApp.sendEmail({
+    to: email,
+    subject: subject,
+    body: rowData.summary
+  });
 
-  Logger.log(
-    isNaN(startTime.getTime())
+  writeLog(
+    "EMAIL_SENT",
+    `${rowData.bookingId} -> ${email}`
   );
 }

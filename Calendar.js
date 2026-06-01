@@ -293,10 +293,12 @@ function updateCalendarEvent(
         rowData.package
       );
 
-    const expectedEventCount =
-      duration === 2
-        ? 2
-        : 1;
+      const expectedEventCount =
+        duration === 2 &&
+        rowData.jam1 &&
+        rowData.jam2
+          ? 2
+          : 1;
 
     // =========================
     // LOAD EXISTING EVENTS
@@ -648,10 +650,23 @@ function updateSingleCalendarEvent({
   // TIME
   // =========================
 
-  const duration =
+  let duration =
     getPackageDuration(
       rowData.package
     );
+
+  // =========================
+  // 2 HOUR PACKAGE
+  // SPLIT SESSION
+  // =========================
+
+  if (
+    duration === 2 &&
+    rowData.jam1 &&
+    rowData.jam2
+  ) {
+    duration = 1;
+  }
 
   const eventTime =
     index === 0
@@ -749,8 +764,11 @@ function updateSingleCalendarEvent({
     uniqueGuests.forEach(email => {
 
       try {
-
         event.addGuest(email);
+        sendAssignmentEmail(
+          email,
+          rowData
+        );
 
       } catch (err) {
 
