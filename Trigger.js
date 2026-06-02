@@ -262,10 +262,15 @@ function onDashboardEdit(e) {
             row
           );
 
-        SpreadsheetApp.flush();
-
         // UPDATE STATUS
         if (success) {
+          //Move Drive
+          syncBookingFolderDate(
+            rowData,
+            sheet,
+            row
+          );
+
           // STATUS PROJECT
           sheet.getRange(
             row,
@@ -299,7 +304,7 @@ function onDashboardEdit(e) {
               5
             );
         }        
-
+        SpreadsheetApp.flush();
         writeLog(
           "UPDATE_GCAL",
           rowData.bookingId

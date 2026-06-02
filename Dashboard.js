@@ -39,9 +39,11 @@ function insertBookingToDashboard(data) {
     "", // deadline
     "", // lain lain
 
-    new Date(),
+    data.driveFolder || "", // drive folder
 
-    ""
+    new Date(), // last update
+    ""  // system message
+
   ]);
 
   const lastRow =
@@ -144,6 +146,11 @@ function updateDashboardBooking(
       CONFIG.COL.BOOKING_ID
     ).getValue();
 
+  const driveFolder = sheet.getRange(
+    row,
+    CONFIG.COL.DRIVE_FOLDER
+  ).getValue();
+  
   const summary =
     generateSummary({
       bookingId,
@@ -156,7 +163,8 @@ function updateDashboardBooking(
       paket,
       instagram,
       whatsapp,
-      notes
+      notes,
+      driveFolder
     });
 
   // UPDATE DASHBOARD
@@ -215,7 +223,7 @@ function updateDashboardBooking(
     row,
     CONFIG.COL.ACTION_CALENDAR
   ).setValue(
-    "Update G-Cal"
+    ""
   );
 
   // SYSTEM MESSAGE
@@ -270,63 +278,4 @@ function isFormRowIdExists(
   );
 }
 
-function testInsertBooking() {
 
-  insertBookingToDashboard({
-
-    timestamp:
-      new Date(),
-
-    formRowId:
-      9999,
-
-    calendarId1:
-      "TEST_EVENT_1",
-
-    calendarId2:
-      "TEST_EVENT_2",
-
-    bookingId:
-      "TEST-BOOKING",
-
-    nama:
-      "TEST CLIENT",
-
-    universitas:
-      "TEST UNIVERSITY",
-
-    fakultas:
-      "TEST FACULTY",
-
-    tanggal:
-      new Date(),
-
-    jam1:
-      "08:00",
-
-    jam2:
-      "15:00",
-
-    lokasi:
-      "TEST LOCATION",
-
-    paket:
-      "Personal Packages Silver - 2 Hours",
-
-    instagram:
-      "testig",
-
-    whatsapp:
-      "08123456789",
-
-    notes:
-      "TEST NOTES",
-
-    summary:
-      "TEST SUMMARY"
-  });
-
-  Logger.log(
-    "TEST INSERT SUCCESS"
-  );
-}

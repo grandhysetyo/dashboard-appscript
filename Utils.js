@@ -352,7 +352,7 @@ function sendAssignmentEmail(
   if (!email) return;
 
   const subject =
-    `[RAYS] ${rowData.client} - ${formatDate(rowData.tanggal)}`;
+    `RAYS Assigmnents | ${rowData.university} - ${rowData.client}`;
 
   MailApp.sendEmail({
     to: email,

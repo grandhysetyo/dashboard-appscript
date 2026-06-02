@@ -344,76 +344,11 @@ function updateCalendarEvent(
     }
 
     // =========================
-    // DETECT MAJOR CHANGE
-    // =========================
-
-    const currentDate =
-      formatDate(
-        rowData.tanggal
-      );
-
-    const currentJam1 =
-      formatTime24(
-        rowData.jam1
-      );
-
-    const currentJam2 =
-      formatTime24(
-        rowData.jam2
-      );
-
-    const storedDate =
-      sheet.getRange(
-        row,
-        CONFIG.COL.DATE
-      ).getDisplayValue();
-
-    const storedJam1 =
-      sheet.getRange(
-        row,
-        CONFIG.COL.TIME_1
-      ).getDisplayValue();
-
-    const storedJam2 =
-      sheet.getRange(
-        row,
-        CONFIG.COL.TIME_2
-      ).getDisplayValue();
-
-    const storedPackage =
-      sheet.getRange(
-        row,
-        CONFIG.COL.PACKAGE
-      ).getDisplayValue();
-
-    const needRecreate =
-
-      hasMissingEvent
-
-      ||
-
-      currentDate !== storedDate
-
-      ||
-
-      currentJam1 !== storedJam1
-
-      ||
-
-      currentJam2 !== storedJam2
-
-      ||
-
-      rowData.package !==
-      storedPackage;
-
-    // =========================
     // PATH A
     // FULL REBUILD
     // =========================
 
-    if (needRecreate) {
-
+    if (hasMissingEvent) {
       writeLog(
         "REBUILD_EVENT",
         rowData.bookingId
@@ -421,11 +356,8 @@ function updateCalendarEvent(
 
       // DELETE OLD EVENTS
       existingEvents.forEach(event => {
-
         try {
-
           event.deleteEvent();
-
         } catch (err) {
 
           writeLog(
@@ -762,18 +694,24 @@ function updateSingleCalendarEvent({
     // =========================
 
     uniqueGuests.forEach(email => {
-
       try {
         event.addGuest(email);
+      } catch (err) {
+        writeLog(
+          "ADD_GUEST_SKIP",
+          err.toString()
+        );
+      }
+      
+      try {
         sendAssignmentEmail(
           email,
           rowData
         );
-
+      
       } catch (err) {
-
         writeLog(
-          "ADD_GUEST_SKIP",
+          "EMAIL_SEND_ERROR",
           err.toString()
         );
       }

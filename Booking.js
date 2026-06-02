@@ -64,14 +64,14 @@ function generateSummary(data) {
   }
 
   return `
-━━━━━━━━━━━━━━
-🎓 RAYS MOMENTS BOOKING
-━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      🎓 RAYS MOMENTS BOOKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 👤 CLIENT
 Nama       : ${data.nama}
 Instagram  : ${data.instagram}
-Whatsapp   : ${data.whatsapp}
+Whatsapp   : ${'https://wa.me/62'+data.whatsapp}
 
 🏫 SESSION
 Universitas : ${data.universitas}
@@ -84,15 +84,21 @@ Jam     : ${jamText}
 📦 PACKAGE
 ${data.paket}
 
-━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📝 NOTES
-━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ${data.notes || "-"}
 
-━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📂 GOOGLE DRIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${data.driveFolder || "-"}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Booking ID:
 ${data.bookingId || "-"}
-━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   `.trim();
 }

@@ -34,6 +34,14 @@ function processBooking(
   const bookingId =
     generateBookingId();
 
+  const folder =
+    createBookingFolder(
+      bookingId,
+      nama,
+      universitas,
+      tanggal
+    );
+
   // =========================
   // SUMMARY
   // =========================
@@ -50,7 +58,8 @@ function processBooking(
       paket,
       instagram,
       whatsapp,
-      notes
+      notes,
+      driveFolder: folder.url
     });
 
 
@@ -88,7 +97,8 @@ function processBooking(
     instagram,
     whatsapp,
     notes,
-    summary
+    summary, 
+    driveFolder: folder.url
   });
 
   writeLog(
