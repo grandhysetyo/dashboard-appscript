@@ -34,12 +34,17 @@ function processBooking(
   const bookingId =
     generateBookingId();
 
+  const sessionDate =
+    parseSessionDate(
+      tanggal
+    );
+
   const folder =
     createBookingFolder(
       bookingId,
       nama,
       universitas,
-      tanggal
+      sessionDate
     );
 
   // =========================

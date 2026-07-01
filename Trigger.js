@@ -143,6 +143,10 @@ function onDashboardEdit(e) {
       projectStatus:
         data[
           CONFIG.COL.PROJECT_STATUS - 1
+        ],
+      driveFolder:
+        data[
+          CONFIG.COL.DRIVE_FOLDER - 1
         ]
     };
 

@@ -19,15 +19,5 @@ function createTriggers() {
     )
     .onEdit()
     .create();
-
-    setupAllDropdowns();
 }
 
-function testColor() {
-
-  Logger.log(
-    getEventColor(
-      "Personal Packages Diamond - 2 Hours"
-    )
-  );
-}

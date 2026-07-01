@@ -1,3 +1,17 @@
+function parseSessionDate(
+  value
+) {
+
+  if (
+    value instanceof Date
+  ) {
+    return value;
+  }
+
+  return new Date(value);
+}
+
+
 function formatDate(
   date
 ) {

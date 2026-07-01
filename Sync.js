@@ -111,12 +111,28 @@ function syncFutureBookings() {
     // INSERT NEW BOOKING
     // =========================
 
+    const bookingId = generateBookingId();
+
     if (!dashboardRow) {
 
       writeLog(
         "NEW_BOOKING_FOUND",
         formRowId
       );
+
+      const sessionDate =
+        combineDateTime(
+          row[8],
+          "00:00"
+        );
+      
+      const folder =
+        createBookingFolder(
+          bookingId,
+          row[2], // NAMA
+          row[3], // UNIVERSITAS
+          sessionDate, // TANGGAL
+        );
 
       const bookingData = {
         timestamp:
@@ -127,7 +143,7 @@ function syncFutureBookings() {
         calendarId2:
           "",
         bookingId:
-          generateBookingId(),
+          bookingId,
         nama:
           row[2],
         universitas:
@@ -153,7 +169,7 @@ function syncFutureBookings() {
         summary:
           generateSummary({
             bookingId:
-              generateBookingId(),
+              bookingId,
             nama:
               row[2],
             universitas:
@@ -175,7 +191,7 @@ function syncFutureBookings() {
             notes:
               row[15],
             driveFolder:
-              row[24]
+              folder.url
           })
       };
       insertBookingToDashboard(

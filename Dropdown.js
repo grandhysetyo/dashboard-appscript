@@ -194,15 +194,10 @@ function refreshEditorStatusDropdown() {
 }
 
 function refreshAllDropdowns() {
-
   refreshPhotographerDropdown();
-
   refreshActionCalendarDropdown();
-
   refreshPaymentDropdown();
-
   refreshProjectDropdown();
-
   SpreadsheetApp.getActive()
     .toast(
       "All dropdowns refreshed",
